@@ -23,7 +23,7 @@ void setup() {
   pinMode(4, OUTPUT);
 
   Serial.begin(115200);
-  while (!Serial);
+  while(!Serial);
   
   reader.PCD_Init();
   Serial.print(F("Reader "));
