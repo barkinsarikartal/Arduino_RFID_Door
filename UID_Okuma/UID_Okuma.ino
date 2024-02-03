@@ -31,20 +31,13 @@ void setup() {
   MFRC522Debug::PCD_DumpVersionToSerial(reader, Serial);
   lcd.init(); 
   lcd.backlight();
-  lcd.clear();
-  lcd.setCursor(6,0);
-  lcd.print("KART");
-  lcd.setCursor(5,1);
-  lcd.print("OKUTUN");
+  mainLCDScreen();
 }
 
 
 void loop() {
   if (reader.PICC_IsNewCardPresent() && reader.PICC_ReadCardSerial()) {
-    Serial.print(F("Card UID: "));
-    MFRC522Debug::PrintUID(Serial, reader.uid);
-    Serial.println();
-
+    
     okunanKartID = "";
 
     for (byte i = 0; i < reader.uid.size; i++) {
@@ -53,10 +46,6 @@ void loop() {
     }
 
     okunanKartID.toUpperCase();
-
-    Serial.print(F("PICC type: "));
-    MFRC522::PICC_Type piccType = reader.PICC_GetType(reader.uid.sak);
-    Serial.println(MFRC522Debug::PICC_GetTypeName(piccType));
 
     Serial.print(validCardID);
     Serial.println(" hafızadaki kart");
@@ -72,15 +61,19 @@ void loop() {
 
     okunanKartID = "";
       
-    lcd.clear();
-    lcd.setCursor(6,0);
-    lcd.print("KART");
-    lcd.setCursor(5,1);
-    lcd.print("OKUTUN");
+    mainLCDScreen();
       
     reader.PICC_HaltA();
     reader.PCD_StopCrypto1();
   }
+}
+
+void mainLCDScreen(){
+  lcd.clear();
+  lcd.setCursor(6,0);
+  lcd.print("KART");
+  lcd.setCursor(5,1);
+  lcd.print("OKUTUN");
 }
 
 void validCard(){
