@@ -20,7 +20,8 @@ String okunanKartID = "";
 
 void setup() {
   
-  pinMode(4, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(5, OUTPUT);
 
   Serial.begin(115200);
   while(!Serial);
@@ -69,22 +70,24 @@ void loop() {
       lcd.setCursor(0,1);
       MFRC522Debug::PrintUID(lcd, reader.uid);
 
-      Serial.print("hafızadaki kart: ");
-      Serial.println(validcard);
-      Serial.print("okunan kart: ");
+      
+      Serial.print(validcard);
+      Serial.println("hafızadaki kart: ");
       Serial.print(okunanKartID);
+      Serial.print("okunan kart: ");
 
-      if(okunanKartID == validcard){
+      if(okunanKartID.equals(validcard)){
           lcd.clear();
           lcd.print("Kapi Aciliyor");
-          digitalWrite(4, HIGH);
+          buzzerValid();
+          digitalWrite(5, HIGH);
           delay(3000);
-          digitalWrite(4, LOW);
+          digitalWrite(5, LOW);
       }
       else if(okunanKartID != validcard){
           lcd.clear();
           lcd.print("Yetkisiz Kart");
-          delay(3000);
+          buzzerDecline();
       }
 
       okunanKartID = "";
@@ -98,4 +101,29 @@ void loop() {
 
       reader.PCD_StopCrypto1();
     }
+  }
+
+  void buzzerValid(){
+      digitalWrite(3, HIGH);
+      delay(200);
+      digitalWrite(3, LOW);
+      delay(100);
+      digitalWrite(3, HIGH);
+      delay(200);
+      digitalWrite(3, LOW);
+  }
+  
+  void buzzerDecline(){
+      digitalWrite(3, HIGH);
+      delay(600);
+      digitalWrite(3, LOW);
+      delay(100);
+      digitalWrite(3, HIGH);
+      delay(600);
+      digitalWrite(3, LOW);
+      delay(100);
+      digitalWrite(3, HIGH);
+      delay(600);
+      digitalWrite(3, LOW);
+      delay(100);
   }
