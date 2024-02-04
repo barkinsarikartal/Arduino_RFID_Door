@@ -1,3 +1,4 @@
+//10650 bytes (34%) of program storage space, 668 bytes (32%) of dynamic memory.
 #include <MFRC522v2.h>
 #include <MFRC522DriverSPI.h>
 #include <MFRC522DriverPinSimple.h>
@@ -13,24 +14,23 @@ MFRC522DriverSPI driver{ss_pin};
 MFRC522 reader{driver};
 
 String okunanKartID = "";
-
+/*
 int counter = 0;
+*/
 int resetCounter = 0;
 
 void setup() {
+  DDRD |= (1 << PD3);
+  DDRD |= (1 << PD5);
+/*
   pinMode(3, OUTPUT);
   pinMode(5, OUTPUT);
+*/
 
   Serial.begin(115200);
   while(!Serial);
   
   reader.PCD_Init();
-  Serial.print(F("Reader "));
-  static uint8_t i = 0;
-  i++;
-  Serial.print(i);
-  Serial.print(F(": "));
-  MFRC522Debug::PCD_DumpVersionToSerial(reader, Serial);
   lcd.init(); 
   lcd.backlight();
   mainLCDScreen();
@@ -47,15 +47,16 @@ void loop() {
     }
 
     okunanKartID.toUpperCase();
-
+/*
     Serial.print(okunanKartID);
     Serial.println(" okunan kart");
-
+*/
     if (isCardIDValid(okunanKartID)) {
       validCard();
-  } else {
+    } 
+    else {
       declinedCard();
-  }
+    }
 
     okunanKartID = "";
       
@@ -64,9 +65,11 @@ void loop() {
     reader.PICC_HaltA();
     reader.PCD_StopCrypto1();
   }
+  /*
   Serial.print(counter);
   Serial.println(". kontrol yapıldı");
   counter++;
+  */
   resetCounter++;
   
   if((resetCounter % 600) == 0){
@@ -75,16 +78,16 @@ void loop() {
     lcd.setCursor(0,1);
     lcd.print("BEKLEYIN");
     reader.PCD_Reset();
-    Serial.print(resetCounter/600);
-    Serial.println(". reset done.");
+    resetCounter = resetCounter/600;
+    Serial.print(resetCounter);
+    Serial.println(F(". reset done."));
     delay(500);
     reader.PCD_Init();
     delay(500);
-    Serial.println("initted reader again.");
     mainLCDScreen();
   }
-  
 
+  
   delay(500);
 }
 
@@ -111,16 +114,16 @@ void validCard(){
   lcd.print("KAPI");
   lcd.setCursor(4,1);
   lcd.print("ACILIYOR");
-  digitalWrite(3, HIGH);
+  PORTD |= (1 << PD3);
   delay(50);
-  digitalWrite(3, LOW);
+  PORTD &= ~(1 << PD3);
   delay(20);
-  digitalWrite(3, HIGH);
+  PORTD |= (1 << PD3);
   delay(50);
-  digitalWrite(3, LOW);
-  digitalWrite(5, HIGH);
+  PORTD &= ~(1 << PD3);
+  PORTD |= (1 << PD5);
   delay(3000);
-  digitalWrite(5, LOW);
+  PORTD &= ~(1 << PD5);
 }
   
 void declinedCard(){
@@ -131,14 +134,14 @@ void declinedCard(){
   lcd.print("KART");
   analogWrite(3, 155);
   delay(600);
-  digitalWrite(3, LOW);
+  PORTD &= ~(1 << PD3);
   delay(100);
   analogWrite(3, 155);
   delay(600);
-  digitalWrite(3, LOW);
+  PORTD &= ~(1 << PD3);
   delay(100);
   analogWrite(3, 155);
   delay(600);
-  digitalWrite(3, LOW);
+  PORTD &= ~(1 << PD3);
   delay(100);
 }
