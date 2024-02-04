@@ -4,6 +4,7 @@
 #include <MFRC522Debug.h>
 #include <LiquidCrystal_I2C.h>
 #include <Wire.h>
+#include "ValidCards.h"
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
@@ -11,7 +12,6 @@ MFRC522DriverPinSimple ss_pin(10);
 MFRC522DriverSPI driver{ss_pin};
 MFRC522 reader{driver};
 
-String validCardID = " C3 31 C5 06";
 String okunanKartID = "";
 
 int counter = 0;
@@ -48,17 +48,14 @@ void loop() {
 
     okunanKartID.toUpperCase();
 
-    Serial.print(validCardID);
-    Serial.println(" hafızadaki kart");
     Serial.print(okunanKartID);
     Serial.println(" okunan kart");
 
-    if(okunanKartID == validCardID){
+    if (isCardIDValid(okunanKartID)) {
       validCard();
-    }
-    else if(okunanKartID != validCardID){
+  } else {
       declinedCard();
-    }
+  }
 
     okunanKartID = "";
       
@@ -89,6 +86,15 @@ void loop() {
   
 
   delay(500);
+}
+
+bool isCardIDValid(String okunanKartID) {
+  for (int j = 0; j < NUM_VALID_CARD_IDS; j++) {
+    if (okunanKartID == validCardIDs[j]) {
+      return true;
+    }
+  }
+  return false;
 }
 
 void mainLCDScreen(){
