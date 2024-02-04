@@ -15,6 +15,7 @@ String validCardID = " C3 31 C5 06";
 String okunanKartID = "";
 
 int counter = 0;
+int resetCounter = 0;
 
 void setup() {
   pinMode(3, OUTPUT);
@@ -67,8 +68,26 @@ void loop() {
     reader.PCD_StopCrypto1();
   }
   Serial.print(counter);
-  Serial.println(". kontrol yapıldı, yeni döngüye başlıyorum");
+  Serial.println(". kontrol yapıldı");
   counter++;
+  resetCounter++;
+  
+  if((resetCounter % 600) == 0){
+    lcd.clear();
+    lcd.print("LUTFEN");
+    lcd.setCursor(0,1);
+    lcd.print("BEKLEYIN");
+    reader.PCD_Reset();
+    Serial.print(resetCounter/600);
+    Serial.println(". reset done.");
+    delay(500);
+    reader.PCD_Init();
+    delay(500);
+    Serial.println("initted reader again.");
+    mainLCDScreen();
+  }
+  
+
   delay(500);
 }
 
