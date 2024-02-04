@@ -14,6 +14,7 @@ MFRC522 reader{driver};
 String validCardID = " C3 31 C5 06";
 String okunanKartID = "";
 
+int counter = 0;
 
 void setup() {
   pinMode(3, OUTPUT);
@@ -33,7 +34,6 @@ void setup() {
   lcd.backlight();
   mainLCDScreen();
 }
-
 
 void loop() {
   if (reader.PICC_IsNewCardPresent() && reader.PICC_ReadCardSerial()) {
@@ -66,6 +66,10 @@ void loop() {
     reader.PICC_HaltA();
     reader.PCD_StopCrypto1();
   }
+  Serial.print(counter);
+  Serial.println(". kontrol yapıldı, yeni döngüye başlıyorum");
+  counter++;
+  delay(500);
 }
 
 void mainLCDScreen(){
