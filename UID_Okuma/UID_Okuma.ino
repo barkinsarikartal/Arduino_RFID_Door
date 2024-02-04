@@ -14,18 +14,12 @@ MFRC522DriverSPI driver{ss_pin};
 MFRC522 reader{driver};
 
 String okunanKartID = "";
-/*
-int counter = 0;
-*/
+
 int resetCounter = 0;
 
 void setup() {
-  DDRD |= (1 << PD3);
+  DDRD |= (1 << PD3); //defined digital 3 and 5 as output by port manipulation to save memory.
   DDRD |= (1 << PD5);
-/*
-  pinMode(3, OUTPUT);
-  pinMode(5, OUTPUT);
-*/
 
   Serial.begin(115200);
   while(!Serial);
@@ -47,10 +41,7 @@ void loop() {
     }
 
     okunanKartID.toUpperCase();
-/*
-    Serial.print(okunanKartID);
-    Serial.println(" okunan kart");
-*/
+    
     if (isCardIDValid(okunanKartID)) {
       validCard();
     } 
@@ -65,11 +56,7 @@ void loop() {
     reader.PICC_HaltA();
     reader.PCD_StopCrypto1();
   }
-  /*
-  Serial.print(counter);
-  Serial.println(". kontrol yapıldı");
-  counter++;
-  */
+  
   resetCounter++;
   
   if((resetCounter % 600) == 0){
@@ -78,16 +65,15 @@ void loop() {
     lcd.setCursor(0,1);
     lcd.print("BEKLEYIN");
     reader.PCD_Reset();
-    resetCounter = resetCounter/600;
     Serial.print(resetCounter);
     Serial.println(F(". reset done."));
+    resetCounter = resetCounter/600;
     delay(500);
     reader.PCD_Init();
     delay(500);
     mainLCDScreen();
   }
 
-  
   delay(500);
 }
 
@@ -114,7 +100,7 @@ void validCard(){
   lcd.print("KAPI");
   lcd.setCursor(4,1);
   lcd.print("ACILIYOR");
-  PORTD |= (1 << PD3);
+  PORTD |= (1 << PD3); //instead of using digitalWrite funciton, used port manipulation to save memory.
   delay(50);
   PORTD &= ~(1 << PD3);
   delay(20);
