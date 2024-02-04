@@ -132,15 +132,15 @@ void declinedCard(){
   lcd.print("YETKISIZ");
   lcd.setCursor(6,1);
   lcd.print("KART");
-  analogWrite(3, 155);
+  PORTD |= (1 << PD3);
   delay(600);
   PORTD &= ~(1 << PD3);
   delay(100);
-  analogWrite(3, 155);
+  PORTD |= (1 << PD3);
   delay(600);
   PORTD &= ~(1 << PD3);
   delay(100);
-  analogWrite(3, 155);
+  PORTD |= (1 << PD3);
   delay(600);
   PORTD &= ~(1 << PD3);
   delay(100);
