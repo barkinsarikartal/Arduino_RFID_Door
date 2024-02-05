@@ -1,4 +1,4 @@
-//10650 bytes (34%) of program storage space, 668 bytes (32%) of dynamic memory.
+//10176 bytes (33%) of program storage space, 666 bytes (32%) of dynamic memory.
 #include <MFRC522v2.h>
 #include <MFRC522DriverSPI.h>
 #include <MFRC522DriverPinSimple.h>
@@ -65,8 +65,6 @@ void loop() {
     lcd.setCursor(0,1);
     lcd.print("BEKLEYIN");
     reader.PCD_Reset();
-    Serial.print(resetCounter);
-    Serial.println(F(". reset done."));
     resetCounter = resetCounter/600;
     delay(500);
     reader.PCD_Init();
