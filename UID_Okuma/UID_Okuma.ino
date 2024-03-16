@@ -42,7 +42,7 @@ void setup() {
 }
 
 void loop() {
-  if (reader.PICC_IsNewCardPresent() && reader.PICC_ReadCardSerial()) {
+  if (reader.PICC_IsNewCardPresent() && reader.PICC_ReadCardSerial()) { //checks if a new card is present and if card serial can be read
 
     readCardID = "";
 
@@ -62,13 +62,13 @@ void loop() {
 
     readCardID = "";
     /* mainLCDScreen(); */
-    reader.PICC_HaltA();
-    reader.PCD_StopCrypto1();
+    reader.PICC_HaltA(); //halts the RC522's operation
+    reader.PCD_StopCrypto1(); //stops cryptographic functions to secure communication
   }
 
   resetCounter++;
 
-  if((resetCounter % 600) == 0){
+  if((resetCounter % 600) == 0){ //resets the RC522 module in every 10 minutes to prevent it from falling asleep
     /*
       lcd.clear();
       lcd.print("LUTFEN");
