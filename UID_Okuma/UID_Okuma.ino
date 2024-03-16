@@ -1,6 +1,15 @@
 /*
+  This code sequence is written to read RFID cards and trigger an electronic door lock if card ID is valid.
+
   8658 bytes (28%) of program storage space, 478 bytes (23%) of dynamic memory.
   "LiquidCrystal functions are commented because they were decided not to be necessary by the project provider."
+
+  Contributors:
+    Arda YILDIZ ardayildiz029@gmail.com
+    Barkın SARIKARTAL barkinsarikartal51@gmail.com
+  Supporters:
+    Burçin TUNA btuna@cankaya.edu.tr
+    H. Hakan MARAŞ hhmaras@cankaya.edu.tr
 */
 
 /* #include <LiquidCrystal_I2C.h> //https://github.com/johnrickman/LiquidCrystal_I2C */
@@ -9,14 +18,14 @@
 #include <MFRC522DriverPinSimple.h> //comes with MFRC522v2.h version: 2.0.4
 #include <MFRC522Debug.h> //comes with MFRC522v2.h version: 2.0.4
 #include <Wire.h> //comes installed with Arduino IDE
-#include "ValidCards.h"
+#include "ValidCards.h" //can be found in this project's github repository.
 
 /* LiquidCrystal_I2C lcd(0x27, 16, 2); */
 
 MFRC522DriverPinSimple ss_pin(10);
 MFRC522DriverSPI driver{ss_pin};
 MFRC522 reader{driver};
-String okunanKartID = "";
+String readCardID = "";
 int resetCounter = 0;
 
 void setup() {
@@ -35,23 +44,23 @@ void setup() {
 void loop() {
   if (reader.PICC_IsNewCardPresent() && reader.PICC_ReadCardSerial()) {
 
-    okunanKartID = "";
+    readCardID = "";
 
     for (byte i = 0; i < reader.uid.size; i++) {
-      okunanKartID += String(reader.uid.uidByte[i] < 0x10 ? " 0" : " ");
-      okunanKartID += String(reader.uid.uidByte[i], HEX);
+      readCardID += String(reader.uid.uidByte[i] < 0x10 ? " 0" : " ");
+      readCardID += String(reader.uid.uidByte[i], HEX);
     }
 
-    okunanKartID.toUpperCase();
+    readCardID.toUpperCase();
 
-    if (isCardIDValid(okunanKartID)) {
+    if (isCardIDValid(readCardID)) {
       validCard();
     } 
     else {
       declinedCard();
     }
 
-    okunanKartID = "";
+    readCardID = "";
     /* mainLCDScreen(); */
     reader.PICC_HaltA();
     reader.PCD_StopCrypto1();
@@ -77,9 +86,9 @@ void loop() {
   delay(500);
 }
 
-bool isCardIDValid(String okunanKartID) { //checks if the card ID is valid or not.
+bool isCardIDValid(String readCardID) { //checks if the card ID is valid or not.
   for (int j = 0; j < NUM_VALID_CARD_IDS; j++) {
-    if (okunanKartID == validCardIDs[j]) {
+    if (readCardID == validCardIDs[j]) {
       return true;
     }
   }
