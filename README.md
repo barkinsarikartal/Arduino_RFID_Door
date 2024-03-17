@@ -1,4 +1,4 @@
-This report explains the door lock system with RFID developed for Çankaya University Technology Transfer Office Incubation Center’s door in details. This system allows people who has valid cards to enter the area in question.
+This door lock system with RFID was developed for the Çankaya University Technology Transfer Office Incubation Center's door. The system allows only individuals with valid cards to enter the area in question.
 
 Developers:
   Arda YILDIZ - ardayildiz029@gmail.com
